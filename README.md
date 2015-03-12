@@ -3,6 +3,11 @@ Markdown parser for PHP
 
 Abstraction over the [cebe/markdown](https://github.com/cebe/markdown)
 
+[![Build Status](https://travis-ci.org/romeOz/rock-markdown.svg?branch=master)](https://travis-ci.org/romeOz/rock-markdown)
+[![HHVM Status](http://hhvm.h4cc.de/badge/romeoz/rock-markdown.svg)](http://hhvm.h4cc.de/package/romeoz/rock-markdown)
+[![Coverage Status](https://coveralls.io/repos/romeOz/rock-markdown/badge.svg?branch=master)](https://coveralls.io/r/romeOz/rock-markdown?branch=master)
+[![License](https://poser.pugx.org/romeOz/rock-markdown/license.svg)](https://packagist.org/packages/romeOz/rock-markdown)
+
 Features
 -------------------
 
