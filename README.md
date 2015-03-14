@@ -22,6 +22,24 @@ Features
     * sapo
  * Thumb image **(option)**
  * Module for [Rock Framework](https://github.com/romeOz/rock)
+
+ 
+Installation
+-------------------
+
+From the Command Line:
+
+```composer require romeoz/rock-markdown:*```
+
+In your composer.json:
+
+```json
+{
+    "require": {
+        "romeoz/rock-markdown": "*"
+    }
+}
+```
  
 Requirements
 -------------------
