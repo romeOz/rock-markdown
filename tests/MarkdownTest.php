@@ -115,8 +115,14 @@ Test</p>',
         );
     }
 
-    public function testThumbSuccess()
+    public function testThumb()
     {
+        $mark = $this->getMarkdown();
+        $this->assertSame(
+            '<p><img src="/data/play.png" alt="foo" class="class2 class" id="id2" /></p>',
+            $mark->parse('![foo](/data/play.png){.class2 #id2 .class}')
+        );
+
         if (!class_exists('\rock\file\FileManager') || !class_exists('\League\Flysystem\Filesystem')) {
             $this->markTestSkipped('FileManager not installed.');
         }
@@ -128,26 +134,22 @@ Test</p>',
         );
 
         $this->assertSame(
-            $mark->parse('![:thumb](/data/play.png){.class2 #id2 .class}'),
-            '<p><img src="/data/play.png" alt="" class="class2 class" id="id2" /></p>'
+            '<p><img src="/data/play.png" alt="" class="class2 class" id="id2" /></p>',
+            $mark->parse('![:thumb](/data/play.png){.class2 #id2 .class}')
         );
-    }
-    public function testThumbFail()
-    {
-        if (!class_exists('\rock\file\FileManager') || !class_exists('\League\Flysystem\Filesystem')) {
-            $this->markTestSkipped('FileManager not installed.');
-        }
+
+        // fail
 
         $mark = $this->getMarkdown(['imageProvider' => $this->getImageProvider()]);
         $this->assertSame(
-            $mark->parse('![:thumb 50x50](/data/foo.png){.class2 #id2 .class}'),
-            '<p><img src="/data/foo.png" alt="" class="class2 class" id="id2" /></p>'
+            '<p><img src="/data/foo.png" alt="" class="class2 class" id="id2" /></p>',
+            $mark->parse('![:thumb 50x50](/data/foo.png){.class2 #id2 .class}')
         );
 
         $mark->denyTags = ['thumb'];
         $this->assertSame(
-            $mark->parse('![:thumb 50x50](/data/foo.png){.class2 #id2 .class}'),
-            '<p><img src="/data/foo.png" alt="" class="class2 class" id="id2" /></p>'
+            '<p><img src="/data/foo.png" alt="" class="class2 class" id="id2" /></p>',
+            $mark->parse('![:thumb 50x50](/data/foo.png){.class2 #id2 .class}')
         );
     }
 

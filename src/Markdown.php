@@ -195,10 +195,10 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         }
         $attributes = $this->renderAttributes($block);
         return '<a href="' . htmlspecialchars($block['url'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"'
-               . (empty($block['title']) ? '' : ' title="' . htmlspecialchars($block['title'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE, 'UTF-8') . '"')
-               . $attributes
-               . (!empty($defaultAttributes) ? ' ' . $defaultAttributes : '')
-               .'>' . (!empty($block['text']) ? $this->renderAbsy($block['text']) : '') . '</a>';
+        . (empty($block['title']) ? '' : ' title="' . htmlspecialchars($block['title'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE, 'UTF-8') . '"')
+        . $attributes
+        . (!empty($defaultAttributes) ? ' ' . $defaultAttributes : '')
+        .'>' . (!empty($block['text']) ? $this->renderAbsy($block['text']) : '') . '</a>';
     }
 
     /**
@@ -210,14 +210,13 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         if (($parts = $this->parseLinkOrImage(substr($markdown, 1))) !== false) {
             list($text, $url, $title, $offset, $key, $data) = $parts;
             if (isset($data['macros'])) {
-                if ($this->isTag('thumb') && $data['macros'] === 'thumb' && isset($data['width'])) {
+                if ($this->isTag('thumb') && $data['macros'] === 'thumb') {
                     if (!isset($this->imageProvider)) {
                         if ($this->throwException) {
                             throw new MarkdownException(MarkdownException::NOT_INSTALL_IMAGE);
                         }
                         return $this->skipImage($markdown);
                     }
-                    $url = $this->imageProvider->get( '/' . ltrim($url, '/'), $data['width'], $data['height']);
                 } elseif ($this->isTag('video') && $data['macros'] !== 'thumb') {
                     $video = $this->calculateVideo(
                         $url,
@@ -235,6 +234,9 @@ class Markdown extends MarkdownExtra implements ObjectInterface
                         $offset + 1
                     ];
                 }
+            }
+            if (isset($this->imageProvider)) {
+                $url = $this->imageProvider->get( '/' . ltrim($url, '/'), Helper::getValue($data['width'], 0), Helper::getValue($data['height'], 0));
             }
             return [
                 [
@@ -303,12 +305,12 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         list($block['url']) = $this->getHostingUrl($block['hosting'], $block['url']);
         $attributes = $this->renderAttributes($block);
         return '<iframe src="' . htmlspecialchars($block['url'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"'
-               . (empty($block['title']) ? '' : ' title="' . htmlspecialchars($block['title'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE, 'UTF-8') . '"')
-               . ' width="'.$block['width'].'"'
-               . ' height="'.$block['height'].'"'
-               . ' allowfullscreen="allowfullscreen"'
-               . ' frameborder="0"'
-               . $attributes . '></iframe>';
+        . (empty($block['title']) ? '' : ' title="' . htmlspecialchars($block['title'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE, 'UTF-8') . '"')
+        . ' width="'.$block['width'].'"'
+        . ' height="'.$block['height'].'"'
+        . ' allowfullscreen="allowfullscreen"'
+        . ' frameborder="0"'
+        . $attributes . '></iframe>';
     }
 
     protected function renderA($block)
@@ -332,8 +334,8 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         $title = htmlspecialchars($block['title'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE, 'UTF-8');
         $playVideo = $this->clientPlayVideo($src, $block['width'], $block['height'], $title);
         return '<a href="' . htmlspecialchars($block['url'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"'
-               . (empty($block['title']) ? '' : ' title="' . $title . '"')
-               . ' style="width: '.$block['width'].'px; height: '.$block['height'].'px" target="_blank" rel="nofollow" '.$attributes.' '.$playVideo.'></a>';
+        . (empty($block['title']) ? '' : ' title="' . $title . '"')
+        . ' style="width: '.$block['width'].'px; height: '.$block['height'].'px" target="_blank" rel="nofollow" '.$attributes.' '.$playVideo.'></a>';
     }
 
     protected function clientPlayVideo($src, $width, $height, $title)
@@ -482,4 +484,4 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         }
         return $elements;
     }
-} 
+}
