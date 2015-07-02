@@ -26,8 +26,8 @@
         "romeoz/rock-image" : "0.10.*"
     },
     "suggest": {
-      "romeoz/rock-file" : "required by thumb",
-      "romeoz/rock-image" : "required by thumb"
+      "romeoz/rock-file" : "required by Rock File",
+      "romeoz/rock-image" : "required by Rock Image"
     },
     "autoload": {
         "psr-4": {
