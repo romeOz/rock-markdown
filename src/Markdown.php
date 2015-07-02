@@ -22,7 +22,6 @@ class Markdown extends MarkdownExtra implements ObjectInterface
      * This feature is useful for comments where newlines are often meant to be real new lines.
      */
     public $enableNewlines = false;
-    public $defaultTextLink = 'link';
     public $users = [];
     public $handlerLinkByUsername;
     public $denyTags = [];
@@ -420,7 +419,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         $specialAttributes  = [];
 
         if (empty($text)) {
-            return [$this->defaultTextLink, $url, $title, $offset, $key, $specialAttributes];
+            return [$url, $url, $title, $offset, $key, $specialAttributes];
         }
         if ($text[0] === ':') {
             if (preg_match('/:(?P<macros>thumb|youtube|vimeo|rutube|vk|dailymotion|sapo)/', $text, $matches)) {
