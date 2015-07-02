@@ -100,6 +100,13 @@ Test</p>',
             '<a href="http://test/" title="title text" class="class1 class2" id="id1"  rel="nofollow" target="_blank">text</a>',
             $result
         );
+
+        // empty note
+        $result = $this->getMarkdown()->parseParagraph('[](http://test/ "title text"){.class1 #id1 .class2}');
+        $this->assertSame(
+            '<a href="http://test/" title="title text" class="class1 class2" id="id1"  rel="nofollow" target="_blank">link</a>',
+            $result
+        );
     }
 
     public function testLink()

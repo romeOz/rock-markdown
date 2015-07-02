@@ -417,6 +417,10 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         }
         list($text, $url, $title, $offset, $key) = $markdown;
         $specialAttributes  = [];
+
+        if (empty($text)) {
+            return ['link', $url, $title, $offset, $key, $specialAttributes];
+        }
         if ($text[0] === ':') {
             if (preg_match('/:(?P<macros>thumb|youtube|vimeo|rutube|vk|dailymotion|sapo)/', $text, $matches)) {
                 $text = str_replace(":{$matches['macros']}", '', $text);
@@ -484,4 +488,4 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         }
         return $elements;
     }
-}
+} 
