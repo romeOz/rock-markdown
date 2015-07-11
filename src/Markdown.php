@@ -45,7 +45,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
     public $defaultWidthVideo = 560;
     public $defaultHeightVideo = 315;
     public $throwException = true;
-    /** @var string|array|ImageProvider  */
+    /** @var string|array|ImageProvider */
     public $imageProvider = 'imageProvider';
     private $_specialAttributesRegex = '\{((?:[#\.][\\w-]+\\s*)+)\}';
     private $_tableCellTag = 'td';
@@ -91,7 +91,8 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         $username = $this->renderAbsy($element[1]);
         $url = '';
         if (is_callable($this->handlerLinkByUsername) &&
-            ($url = call_user_func($this->handlerLinkByUsername, $username, $this))) {
+            ($url = call_user_func($this->handlerLinkByUsername, $username, $this))
+        ) {
             $this->users[] = $username;
         } else {
             return "@{$username}";
@@ -99,7 +100,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
 
         $url = $url ? htmlspecialchars($url, ENT_COMPAT | ENT_HTML401, 'UTF-8') : '#';
         $username = htmlspecialchars($username, ENT_COMPAT | ENT_HTML401, 'UTF-8');
-        return '<a href="'.$url.'" title="'.$username.'">@'.$username.'</a>';
+        return '<a href="' . $url . '" title="' . $username . '">@' . $username . '</a>';
     }
 
     protected function identifyTable($line, $lines, $current)
@@ -107,7 +108,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         if (strpos($line, '|') !== false && preg_match('~|.*|~', $line) && preg_match('~^[\s\|\:-]+$~', $lines[$current + 1])) {
             return true;
         }
-        if (isset($lines[$current+1]) && strpos($line, '{') !== false  && strpos($lines[$current+1], '|') !== false && preg_match('~|.*|~', $lines[$current+1]) && preg_match('~^[\s\|\:-]+$~', $lines[$current + 2])) {
+        if (isset($lines[$current + 1]) && strpos($line, '{') !== false && strpos($lines[$current + 1], '|') !== false && preg_match('~|.*|~', $lines[$current + 1]) && preg_match('~^[\s\|\:-]+$~', $lines[$current + 2])) {
             return true;
         }
         return false;
@@ -147,7 +148,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         $this->_tableCellAlign = $block['cols'];
         $content .= "<thead>\n";
         $first = true;
-        foreach($block['rows'] as $row) {
+        foreach ($block['rows'] as $row) {
             $this->_tableCellTag = $first ? 'th' : 'td';
             $align = empty($this->_tableCellAlign[$this->_tableCellCount]) ? '' : ' align="' . $this->_tableCellAlign[$this->_tableCellCount++] . '"';
             $tds = "<$this->_tableCellTag$align>" . $this->renderAbsy($this->parseInline($row)) . "</$this->_tableCellTag>";
@@ -198,7 +199,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         . (empty($block['title']) ? '' : ' title="' . htmlspecialchars($block['title'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE, 'UTF-8') . '"')
         . $attributes
         . (!empty($defaultAttributes) ? ' ' . $defaultAttributes : '')
-        .'>' . (!empty($block['text']) ? $this->renderAbsy($block['text']) : '') . '</a>';
+        . '>' . (!empty($block['text']) ? $this->renderAbsy($block['text']) : '') . '</a>';
     }
 
     /**
@@ -236,7 +237,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
                 }
             }
             if (isset($this->imageProvider)) {
-                $url = $this->imageProvider->get( '/' . ltrim($url, '/'), Helper::getValue($data['width'], 0), Helper::getValue($data['height'], 0));
+                $url = $this->imageProvider->get('/' . ltrim($url, '/'), Helper::getValue($data['width'], 0), Helper::getValue($data['height'], 0));
             }
             return [
                 [
@@ -306,8 +307,8 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         $attributes = $this->renderAttributes($block);
         return '<iframe src="' . htmlspecialchars($block['url'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"'
         . (empty($block['title']) ? '' : ' title="' . htmlspecialchars($block['title'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE, 'UTF-8') . '"')
-        . ' width="'.$block['width'].'"'
-        . ' height="'.$block['height'].'"'
+        . ' width="' . $block['width'] . '"'
+        . ' height="' . $block['height'] . '"'
         . ' allowfullscreen="allowfullscreen"'
         . ' frameborder="0"'
         . $attributes . '></iframe>';
@@ -335,16 +336,16 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         $playVideo = $this->clientPlayVideo($src, $block['width'], $block['height'], $title);
         return '<a href="' . htmlspecialchars($block['url'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"'
         . (empty($block['title']) ? '' : ' title="' . $title . '"')
-        . ' style="width: '.$block['width'].'px; height: '.$block['height'].'px" target="_blank" rel="nofollow" '.$attributes.' '.$playVideo.'></a>';
+        . ' style="width: ' . $block['width'] . 'px; height: ' . $block['height'] . 'px" target="_blank" rel="nofollow" ' . $attributes . ' ' . $playVideo . '></a>';
     }
 
     protected function clientPlayVideo($src, $width, $height, $title)
     {
         if ($this->dummy & self::DUMMY_PLAY) {
-            return 'data-ng-click="rock.html.playVideo(\''.$src.'\', '.$width.', '.$height.', \''.$title.'\', $event)"';
+            return 'data-ng-click="rock.html.playVideo(\'' . $src . '\', ' . $width . ', ' . $height . ', \'' . $title . '\', $event)"';
         }
         if ($this->dummy & self::DUMMY_PLAY_IN_MODAL) {
-            return 'data-ng-click="rock.html.playVideoModal(\''.$src.'\', '.$width.', '.$height.', \''.$title.'\', $event)"';
+            return 'data-ng-click="rock.html.playVideoModal(\'' . $src . '\', ' . $width . ', ' . $height . ', \'' . $title . '\', $event)"';
         }
         return '';
     }
@@ -362,7 +363,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
                 break;
             case 'rutube':
                 $src = "//rutube.ru/play/embed/{$url}";
-                $url = $this->dummy & self::DUMMY ? "http://rutube.ru/video/{$url}/": $src;
+                $url = $this->dummy & self::DUMMY ? "http://rutube.ru/video/{$url}/" : $src;
                 break;
             case 'vk':
                 $src = "//vk.com/video_ext.php?{$url}";
@@ -393,7 +394,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
             $result .= " {$name}=\"$value\"";
         }
 
-        return  $result;
+        return $result;
     }
 
     protected function concatSpecialAttributes(array $block, &$defaultAttributes = null)
@@ -416,7 +417,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
             return false;
         }
         list($text, $url, $title, $offset, $key) = $markdown;
-        $specialAttributes  = [];
+        $specialAttributes = [];
 
         if (empty($text)) {
             return [$url, $url, $title, $offset, $key, $specialAttributes];
@@ -473,7 +474,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         $elements = parent::parseInline($text);
         // merge special attribute elements to links and images as they are not part of the final absy later
         $relatedElement = null;
-        foreach($elements as $i => $element) {
+        foreach ($elements as $i => $element) {
             if ($element[0] === 'link' || $element[0] === 'image' || $element[0] === 'iframe') {
                 $relatedElement = $i;
             } elseif ($element[0] === 'specialAttributes') {

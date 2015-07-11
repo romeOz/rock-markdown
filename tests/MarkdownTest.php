@@ -19,6 +19,7 @@ class MarkdownTest extends \PHPUnit_Framework_TestCase
     {
         return new Markdown($config);
     }
+
     public function testVideoInline()
     {
         $result = $this->getMarkdown()->parseParagraph('![:youtube 480x360](6JvDSwFtEC0 "title"){.class1 #id1 .class2}');
@@ -81,7 +82,7 @@ Test</p>',
 
 ');
         $this->assertSame(
-        '<table class="class1 class1" id="id1">
+            '<table class="class1 class1" id="id1">
 <thead>
 <tr><th align="left"> header_1 </th><th align="left">header_2 </th><th align="center">header_3 </th></tr>
 </thead>
@@ -89,7 +90,7 @@ Test</p>',
 <tr><td align="left"> <strong>Foo</strong> </td><td align="left">bar </td><td align="center">123 </td></tr>
 </tbody>
 </table>',
-        $result
+            $result
         );
     }
 
@@ -206,7 +207,7 @@ bar')
             [
                 'srcImage' => '/data',
                 'srcCache' => '/data/cache',
-                'adapter' =>   [
+                'adapter' => [
                     'class' => FileManager::className(),
                     'adapter' => new Local(Alias::getAlias('@rockunit/data'))
                 ],
