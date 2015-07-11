@@ -54,7 +54,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
 
     public function init()
     {
-        $this->imageProvider = Instance::ensure($this->imageProvider, null, false);
+        $this->imageProvider = Instance::ensure($this->imageProvider, null, [], false);
     }
 
     public function parse($text)
