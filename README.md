@@ -1,7 +1,7 @@
 Markdown parser for PHP
 =================
 
-Abstraction over the [cebe/markdown](https://github.com/cebe/markdown)
+Abstraction over the [cebe/markdown](https://github.com/cebe/markdown).
 
 [![Build Status](https://travis-ci.org/romeOz/rock-markdown.svg?branch=master)](https://travis-ci.org/romeOz/rock-markdown)
 [![HHVM Status](http://hhvm.h4cc.de/badge/romeoz/rock-markdown.svg)](http://hhvm.h4cc.de/package/romeoz/rock-markdown)
@@ -20,8 +20,8 @@ Features
     * ivi
     * dailymotion
     * sapo
- * Thumb image **(option)**
- * Module for [Rock Framework](https://github.com/romeOz/rock)
+ * Cropping image
+ * Standalone module/component for [Rock Framework](https://github.com/romeOz/rock)
 
  
 Installation
@@ -29,7 +29,9 @@ Installation
 
 From the Command Line:
 
-```composer require romeoz/rock-markdown:*```
+```
+composer require romeoz/rock-markdown
+```
 
 In your composer.json:
 
@@ -44,6 +46,9 @@ In your composer.json:
 Requirements
 -------------------
  * **PHP 5.4+**
+ * For cropping image required [Rock Image](https://github.com/romeOz/rock-validate): `composer require romeoz/rock-image`
+
+>All unbolded dependencies is optional.
 
 License
 -------------------
