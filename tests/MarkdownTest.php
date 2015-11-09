@@ -58,7 +58,7 @@ Test</p>',
     {
         $config = [
             'dummy' => Markdown::DUMMY,
-            'specialAttributesDummy' => '.dummy-video'
+            'defaultAttributesDummy' => '.dummy-video'
             //'denyTags' => ['code']
         ];
         $result = $this->getMarkdown($config)->parse('![:youtube 480x360][video]
@@ -154,7 +154,7 @@ Test</p>',
             $mark->parse('![:thumb 50x50](/data/foo.png){.class2 #id2 .class}')
         );
 
-        $mark->denyTags = ['thumb'];
+        $mark->setDenyTags(['thumb']);
         $this->assertSame(
             '<p><img src="/data/foo.png" alt="" class="class2 class" id="id2" /></p>',
             $mark->parse('![:thumb 50x50](/data/foo.png){.class2 #id2 .class}')

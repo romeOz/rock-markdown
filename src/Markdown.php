@@ -18,14 +18,26 @@ class Markdown extends MarkdownExtra implements ObjectInterface
     const DUMMY_PLAY_IN_MODAL = 4;
 
     /**
-     * @var bool whether to interpret newlines as `<br>`-tags.
+     * Enable using new lines.
      * This feature is useful for comments where newlines are often meant to be real new lines.
+     * @var bool whether to interpret newlines as `<br>`-tags.
      */
-    public $enableNewlines = false;
-    public $users = [];
-    public $handlerLinkByUsername;
-    public $denyTags = [];
-    public $defaultAttributes = [
+    protected $enableNewlines = false;
+    /**
+     * Handler for calculate link by username.
+     * @var callable
+     */
+    protected $handlerLinkByUsername;
+    /**
+     * List no parsing tags.
+     * @var array
+     */
+    protected $denyTags = [];
+    /**
+     * List default attributes for tags.
+     * @var array
+     */
+    protected $defaultAttributes = [
         'link' => [
             'rel' => 'nofollow',
             'target' => '_blank'
@@ -40,23 +52,145 @@ class Markdown extends MarkdownExtra implements ObjectInterface
      *
      * @var int
      */
-    public $dummy = 0;
-    public $specialAttributesDummy = '.dummy-video';
-    public $defaultWidthVideo = 560;
-    public $defaultHeightVideo = 315;
-    public $throwException = true;
-    /** @var string|array|ImageProvider */
+    protected $dummy = 0;
+    /**
+     * Special attributes for dummy.
+     * @var string
+     */
+    protected $defaultAttributesDummy = '.dummy-video';
+    /**
+     * Dimensions video tag.
+     * @var array
+     */
+    protected $dimensionsVideo = [560, 315];
+    /**
+     * Enabled a throw exception.
+     * @var bool
+     */
+    protected $throwException = true;
+    /**
+     * List usernames.
+     * @var array
+     */
+    protected $usernames = [];
+    /**
+     * Instance {@see \rock\image\ImageProvider}.
+     * @var string|array|ImageProvider
+     */
     public $imageProvider = 'imageProvider';
-    private $_specialAttributesRegex = '\{((?:[#\.][\\w-]+\\s*)+)\}';
-    private $_tableCellTag = 'td';
-    private $_tableCellCount = 0;
-    private $_tableCellAlign = [];
+
 
     public function init()
     {
         $this->imageProvider = Instance::ensure($this->imageProvider, null, [], false);
     }
 
+    /**
+     * Sets a dimensions video tag.
+     * @param array $dimensions
+     * @return $this
+     */
+    public function setDimensionsVideo(array $dimensions)
+    {
+        $this->dimensionsVideo = $dimensions;
+        return $this;
+    }
+
+    /**
+     * Sets a dummy mode.
+     *
+     * - {@see \rock\markdown\Markdown::DUMMY_VIDEO} - link ```<a href ="..." target="_blank">...</a>```
+     * - {@see \rock\markdown\Markdown::DUMMY_PLAY} - when clicking on the link shows video (JavaScript)
+     * - {@see \rock\markdown\Markdown::DUMMY_PLAY_IN_MODAL} - when clicking on the link shows modal window with video (JavaScript)
+     *
+     * @param int $mode
+     * @return $this
+     */
+    public function setDummy($mode)
+    {
+        $this->dummy = $mode;
+        return $this;
+    }
+
+    /**
+     * Sets a list no parsing tags.
+     * @param array $denyTags
+     * @return $this
+     */
+    public function setDenyTags(array $denyTags)
+    {
+        $this->denyTags = $denyTags;
+        return $this;
+    }
+
+    /**
+     * Sets a list default attributes to tags.
+     * @param array $defaultAttributes
+     * @return $this
+     */
+    public function setDefaultAttributes(array $defaultAttributes)
+    {
+        $this->defaultAttributes = $defaultAttributes;
+        return $this;
+    }
+
+    /**
+     * Sets a handler for calculate link by username.
+     * @param callable $handlerLinkByUsername
+     * @return $this
+     */
+    public function setHandlerLinkByUsername(callable $handlerLinkByUsername)
+    {
+        $this->handlerLinkByUsername = $handlerLinkByUsername;
+        return $this;
+    }
+
+    /**
+     * Enable using new lines.
+     * >This feature is useful for comments where newlines are often meant to be real new lines
+     * @param boolean $enableNewlines
+     * @return $this
+     */
+    public function setEnableNewlines($enableNewlines)
+    {
+        $this->enableNewlines = $enableNewlines;
+        return $this;
+    }
+
+    /**
+     * Sets a special attributes for dummy.
+     * @param string $attributes
+     * @return $this
+     */
+    public function setDefaultAttributesDummy($attributes)
+    {
+        $this->defaultAttributesDummy = $attributes;
+        return $this;
+    }
+
+    /**
+     * Returns list usernames.
+     * @return array
+     */
+    public function getUsernames()
+    {
+        return $this->usernames;
+    }
+
+    /**
+     * Enabled a throw exception.
+     * @param bool $enabled
+     * @return $this
+     */
+    public function setThrowException($enabled)
+    {
+        $this->throwException = $enabled;
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function parse($text)
     {
         return trim(parent::parse($text));
@@ -72,7 +206,6 @@ class Markdown extends MarkdownExtra implements ObjectInterface
      */
     protected function parseUsernameLink($markdown)
     {
-
         if (preg_match('/^@(?P<username>[\w-]+)/u', $markdown, $matches)) {
             return [
                 // return the parsed tag as an element of the abstract syntax tree and call `parseInline()` to allow
@@ -93,7 +226,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         if (is_callable($this->handlerLinkByUsername) &&
             ($url = call_user_func($this->handlerLinkByUsername, $username, $this))
         ) {
-            $this->users[] = $username;
+            $this->usernames[] = $username;
         } else {
             return "@{$username}";
         }
@@ -114,8 +247,10 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         return false;
     }
 
+    private $_specialAttributesRegex = '\{((?:[#\.][\\w-]+\\s*)+)\}';
+
     /**
-     * Consume lines for a table
+     * @inheritdoc
      */
     protected function consumeTable($lines, $current)
     {
@@ -136,8 +271,12 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         return [$block, $current];
     }
 
+    private $_tableCellTag = 'td';
+    private $_tableCellCount = 0;
+    private $_tableCellAlign = [];
+
     /**
-     * Consume lines for a table
+     * @inheritdoc
      */
     protected function renderTable($block)
     {
@@ -165,7 +304,6 @@ class Markdown extends MarkdownExtra implements ObjectInterface
         }
 
         return "<table{$attributes}>\n$content</tbody>\n</table>";
-
     }
 
     /**
@@ -219,14 +357,9 @@ class Markdown extends MarkdownExtra implements ObjectInterface
                         return $this->skipImage($markdown);
                     }
                 } elseif ($this->isTag('video') && $data['macros'] !== 'thumb') {
-                    $video = $this->calculateVideo(
-                        $url,
-                        Helper::getValue($data['width'], $this->defaultWidthVideo),
-                        Helper::getValue($data['height'], $this->defaultHeightVideo),
-                        Helper::getValue($title)
-
-                    );
-                    //return [['text', $video], $offset + 1];
+                    $width = isset($data['width']) ? $data['width'] : $this->dimensionsVideo[0];
+                    $height = isset($data['height']) ? $data['height'] : $this->dimensionsVideo[1];
+                    $video = $this->calculateVideo($url, $width, $height, $title ? : null);
                     $video['refkey'] = $key;
                     $video['orig'] = substr($markdown, 0, $offset + 1);
                     $video['hosting'] = $data['macros'];
@@ -330,7 +463,7 @@ class Markdown extends MarkdownExtra implements ObjectInterface
             $block['hosting'] = '';
         }
         list($block['url'], $src) = $this->getHostingUrl($block['hosting'], $block['url']);
-        $block['attributes'] = "{$this->specialAttributesDummy} " . $block['attributes'];
+        $block['attributes'] = "{$this->defaultAttributesDummy} " . $block['attributes'];
         $attributes = $this->renderAttributes($block);
         $title = htmlspecialchars($block['title'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE, 'UTF-8');
         $playVideo = $this->clientPlayVideo($src, $block['width'], $block['height'], $title);
